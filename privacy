@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy - Memorino Account Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #1976d2;
+      --primary-hover: #1565c0;
+      --bg-light: #f9f9f9;
+      --text-light: #333;
+      --card-light: #fff;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --bg-dark: #121212;
+      --text-dark: #eee;
+      --card-dark: #1e1e1e;
+      --shadow-dark: rgba(255, 255, 255, 0.08);
+      --pro-color: #9c27b0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+    }
+    body.dark h1 {
+      color: var(--primary-hover);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: var(--card-light);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px var(--shadow-light);
+      border: 1px solid #e0e0e0;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    body.dark .card {
+      background-color: var(--card-dark);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+      border-color: #333;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+    body.dark h2 {
+      color: var(--primary-hover);
+    }
+
+    p, li {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover {
+      color: var(--primary-hover);
+    }
+    body.dark a {
+      color: var(--primary-hover);
+    }
+
+    .theme-language-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .theme-toggle, .language-toggle {
+      cursor: pointer;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      transition: color 0.3s ease;
+    }
+    body.dark .theme-toggle, body.dark .language-toggle {
+      color: var(--primary-hover);
+    }
+
+    .language-selector {
+      display: none;
+      position: absolute;
+      top: 2.5rem;
+      right: 0;
+      background: var(--card-light);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px var(--shadow-light);
+      padding: 0.5rem;
+      z-index: 10;
+    }
+    body.dark .language-selector {
+      background: var(--card-dark);
+      box-shadow: 0 4px 10px var(--shadow-dark);
+    }
+
+    .language-selector button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    body.dark .language-selector button {
+      color: var(--text-dark);
+    }
+    .language-selector button:hover {
+      background: var(--primary-color);
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      p, li {
+        font-size: 0.95rem;
+      }
+
+      .card {
+        padding: 1.2rem;
+        border-radius: 12px;
+      }
+
+      .theme-language-container {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+      }
+
+      p, li {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-language-container">
+    <button class="theme-toggle" id="themeToggle" title="Cambia tema" aria-label="Cambia tema">🌞</button>
+    <button class="language-toggle" id="languageToggle" title="Cambia lingua" aria-label="Cambia lingua">🇮🇹</button>
+    <div class="language-selector" id="languageSelector">
+      <button data-lang="it">🇮🇹 Italiano</button>
+      <button data-lang="en">🇬🇧 English</button>
+      <button data-lang="fr">🇫🇷 Français</button>
+      <button data-lang="de">🇩🇪 Deutsch</button>
+      <button data-lang="es">🇪🇸 Español</button>
+    </div>
+  </div>
+  <header>
+    <h1 id="title">Privacy Policy - Memorino Account Pro</h1>
+  </header>
+  <div class="container">
+    <div class="card">
+      <h2 id="introTitle">Introduzione</h2>
+      <p id="introText">
+        Benvenuto in Memorino Account Pro. La tua privacy è la nostra priorità. Memorino Account Pro è un'applicazione progettata per gestire in modo sicuro le tue credenziali direttamente sul tuo dispositivo. <strong>Non raccogliamo né memorizziamo alcun dato personale su server remoti</strong>. Tutti i dati che inserisci rimangono esclusivamente nella memoria del tuo telefono.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="dataStoredTitle">Dati Memorizzati</h2>
+      <p id="dataStoredText1">
+        Memorino Account Pro non raccoglie dati personali. I seguenti dati vengono memorizzati esclusivamente nella memoria locale del tuo dispositivo:
+      </p>
+      <ul>
+        <li id="accountDataText"><strong>Dati dell'account</strong>: Nome utente, email e password che inserisci per creare e accedere al tuo account nell'applicazione.</li>
+        <li id="credentialsText"><strong>Credenziali salvate</strong>: Nomi degli account, email, password e tag associati che scegli di salvare, tutti crittografati localmente sul tuo dispositivo.</li>
+        <li id="biometricDataText"><strong>Dati biometrici</strong>: Se utilizzi l'autenticazione biometrica, i dati biometrici non vengono memorizzati da noi ma sono gestiti esclusivamente dal sistema operativo del tuo dispositivo.</li>
+      </ul>
+      <p id="dataStoredText2">
+        <strong>Nessun dato viene inviato a server remoti o condiviso con terze parti.</strong> L'applicazione funziona interamente offline, garantendo che i tuoi dati rimangano sul tuo dispositivo.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="dataUsageTitle">Come Utilizziamo i Tuoi Dati</h2>
+      <p id="dataUsageText">
+        I dati che inserisci sono utilizzati esclusivamente per:
+      </p>
+      <ul>
+        <li id="functionalityText">Fornire le funzionalità dell'applicazione, come salvare e gestire le tue credenziali in modo sicuro.</li>
+        <li id="securityText">Proteggere l'accesso tramite crittografia AES-256 e autenticazione biometrica (se abilitata).</li>
+        <li id="backupText">Consentire l'importazione/esportazione dei dati in formato JSON per il backup e il ripristino, salvati localmente sul tuo dispositivo.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 id="dataSecurityTitle">Sicurezza dei Dati</h2>
+      <p id="dataSecurityText">
+        Adottiamo misure di sicurezza avanzate per proteggere i tuoi dati sul tuo dispositivo:
+      </p>
+      <ul>
+        <li id="encryptionText"><strong>Crittografia</strong>: Tutte le credenziali sono crittografate utilizzando AES-256 con una chiave derivata dalla tua password, memorizzata solo sul tuo dispositivo.</li>
+        <li id="localStorageText"><strong>Archiviazione locale</strong>: Tutti i dati sono salvati esclusivamente nella memoria del tuo telefono e non vengono mai trasmessi altrove.</li>
+        <li id="biometricSecurityText"><strong>Autenticazione biometrica</strong>: Se abilitata, utilizza i meccanismi di sicurezza del tuo dispositivo per proteggere l'accesso.</li>
+      </ul>
+      <p id="securityAdviceText">
+        Ti consigliamo di utilizzare una password complessa e di proteggere il tuo dispositivo per garantire la sicurezza dei tuoi dati.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="dataSharingTitle">Condivisione dei Dati</h2>
+      <p id="dataSharingText">
+        <strong>Non condividiamo né trasmettiamo i tuoi dati a terze parti</strong>. Poiché tutti i dati sono memorizzati esclusivamente sul tuo dispositivo, non c'è alcuna condivisione o trasferimento di informazioni al di fuori del tuo telefono.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="userRightsTitle">I Tuoi Diritti</h2>
+      <p id="userRightsText">
+        Hai pieno controllo sui tuoi dati, che puoi gestire direttamente nell'applicazione:
+      </p>
+      <ul>
+        <li id="accessText"><strong>Accesso</strong>: Puoi visualizzare e modificare i tuoi dati salvati nell'applicazione.</li>
+        <li id="deletionText"><strong>Cancellazione</strong>: Puoi eliminare i tuoi account e dati tramite la funzione di logout o eliminazione account.</li>
+        <li id="portabilityText"><strong>Portabilità</strong>: Puoi esportare i tuoi dati in formato JSON utilizzando la funzione di esportazione per il backup.</li>
+      </ul>
+      <p id="contactRightsText">
+        Per ulteriori informazioni o assistenza, contattaci a <a href="mailto:astorinofabio86@gmail.com">astorinofabio86@gmail.com</a>.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="policyChangesTitle">Modifiche alla Privacy Policy</h2>
+      <p id="policyChangesText">
+        Ci riserviamo il diritto di aggiornare questa Privacy Policy. Eventuali modifiche saranno pubblicate su questa pagina, con l'indicazione della data di aggiornamento. Ti consigliamo di controllare periodicamente questa pagina.
+      </p>
+      <p id="lastUpdateText"><strong>Data di ultimo aggiornamento</strong>: 27 Luglio 2025</p>
+    </div>
+
+    <div class="card">
+      <h2 id="contactTitle">Contattaci</h2>
+      <p id="contactText">
+        Per domande o dubbi sulla nostra Privacy Policy, contattaci a:<br>
+        Email: <a href="mailto:astorinofabio86@gmail.com">astorinofabio86@gmail.com</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Traduzioni
+    const translations = {
+      it: {
+        title: "Privacy Policy - Memorino Account Pro",
+        introTitle: "Introduzione",
+        introText: "Benvenuto in Memorino Account Pro. La tua privacy è la nostra priorità. Memorino Account Pro è un'applicazione progettata per gestire in modo sicuro le tue credenziali direttamente sul tuo dispositivo. <strong>Non raccogliamo né memorizziamo alcun dato personale su server remoti</strong>. Tutti i dati che inserisci rimangono esclusivamente nella memoria del tuo telefono.",
+        dataStoredTitle: "Dati Memorizzati",
+        dataStoredText1: "Memorino Account Pro non raccoglie dati personali. I seguenti dati vengono memorizzati esclusivamente nella memoria locale del tuo dispositivo:",
+        accountDataText: "<strong>Dati dell'account</strong>: Nome utente, email e password che inserisci per creare e accedere al tuo account nell'applicazione.",
+        credentialsText: "<strong>Credenziali salvate</strong>: Nomi degli account, email, password e tag associati che scegli di salvare, tutti crittografati localmente sul tuo dispositivo.",
+        biometricDataText: "<strong>Dati biometrici</strong>: Se utilizzi l'autenticazione biometrica, i dati biometrici non vengono memorizzati da noi ma sono gestiti esclusivamente dal sistema operativo del tuo dispositivo.",
+        dataStoredText2: "<strong>Nessun dato viene inviato a server remoti o condiviso con terze parti.</strong> L'applicazione funziona interamente offline, garantendo che i tuoi dati rimangano sul tuo dispositivo.",
+        dataUsageTitle: "Come Utilizziamo i Tuoi Dati",
+        dataUsageText: "I dati che inserisci sono utilizzati esclusivamente per:",
+        functionalityText: "Fornire le funzionalità dell'applicazione, come salvare e gestire le tue credenziali in modo sicuro.",
+        securityText: "Proteggere l'accesso tramite crittografia AES-256 e autenticazione biometrica (se abilitata).",
+        backupText: "Consentire l'importazione/esportazione dei dati in formato JSON per il backup e il ripristino, salvati localmente sul tuo dispositivo.",
+        dataSecurityTitle: "Sicurezza dei Dati",
+        dataSecurityText: "Adottiamo misure di sicurezza avanzate per proteggere i tuoi dati sul tuo dispositivo:",
+        encryptionText: "<strong>Crittografia</strong>: Tutte le credenziali sono crittografate utilizzando AES-256 con una chiave derivata dalla tua password, memorizzata solo sul tuo dispositivo.",
+        localStorageText: "<strong>Archiviazione locale</strong>: Tutti i dati sono salvati esclusivamente nella memoria del tuo telefono e non vengono mai trasmessi altrove.",
+        biometricSecurityText: "<strong>Autenticazione biometrica</strong>: Se abilitata, utilizza i meccanismi di sicurezza del tuo dispositivo per proteggere l'accesso.",
+        securityAdviceText: "Ti consigliamo di utilizzare una password complessa e di proteggere il tuo dispositivo per garantire la sicurezza dei tuoi dati.",
+        dataSharingTitle: "Condivisione dei Dati",
+        dataSharingText: "<strong>Non condividiamo né trasmettiamo i tuoi dati a terze parti</strong>. Poiché tutti i dati sono memorizzati esclusivamente sul tuo dispositivo, non c'è alcuna condivisione o trasferimento di informazioni al di fuori del tuo telefono.",
+        userRightsTitle: "I Tuoi Diritti",
+        userRightsText: "Hai pieno controllo sui tuoi dati, che puoi gestire direttamente nell'applicazione:",
+        accessText: "<strong>Accesso</strong>: Puoi visualizzare e modificare i tuoi dati salvati nell'applicazione.",
+        deletionText: "<strong>Cancellazione</strong>: Puoi eliminare i tuoi account e dati tramite la funzione di logout o eliminazione account.",
+        portabilityText: "<strong>Portabilità</strong>: Puoi esportare i tuoi dati in formato JSON utilizzando la funzione di esportazione per il backup.",
+        contactRightsText: "Per ulteriori informazioni o assistenza, contattaci a <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>.",
+        policyChangesTitle: "Modifiche alla Privacy Policy",
+        policyChangesText: "Ci riserviamo il diritto di aggiornare questa Privacy Policy. Eventuali modifiche saranno pubblicate su questa pagina, con l'indicazione della data di aggiornamento. Ti consigliamo di controllare periodicamente questa pagina.",
+        lastUpdateText: "<strong>Data di ultimo aggiornamento</strong>: 27 Luglio 2025",
+        contactTitle: "Contattaci",
+        contactText: "Per domande o dubbi sulla nostra Privacy Policy, contattaci a:<br>Email: <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>"
+      },
+      en: {
+        title: "Privacy Policy - Memorino Account Pro",
+        introTitle: "Introduction",
+        introText: "Welcome to Memorino Account Pro. Your privacy is our priority. Memorino Account Pro is an application designed to securely manage your credentials directly on your device. <strong>We do not collect or store any personal data on remote servers</strong>. All data you enter remains exclusively in your phone's memory.",
+        dataStoredTitle: "Stored Data",
+        dataStoredText1: "Memorino Account Pro does not collect personal data. The following data is stored exclusively in your device's local memory:",
+        accountDataText: "<strong>Account Data</strong>: Username, email, and password you enter to create and access your account in the application.",
+        credentialsText: "<strong>Saved Credentials</strong>: Account names, emails, passwords, and associated tags you choose to save, all encrypted locally on your device.",
+        biometricDataText: "<strong>Biometric Data</strong>: If you use biometric authentication, biometric data is not stored by us but is managed solely by your device's operating system.",
+        dataStoredText2: "<strong>No data is sent to remote servers or shared with third parties.</strong> The application operates entirely offline, ensuring your data remains on your device.",
+        dataUsageTitle: "How We Use Your Data",
+        dataUsageText: "The data you enter is used solely for:",
+        functionalityText: "Providing the application's functionality, such as securely saving and managing your credentials.",
+        securityText: "Protecting access through AES-256 encryption and biometric authentication (if enabled).",
+        backupText: "Enabling data import/export in JSON format for backup and restore, saved locally on your device.",
+        dataSecurityTitle: "Data Security",
+        dataSecurityText: "We implement advanced security measures to protect your data on your device:",
+        encryptionText: "<strong>Encryption</strong>: All credentials are encrypted using AES-256 with a key derived from your password, stored only on your device.",
+        localStorageText: "<strong>Local Storage</strong>: All data is stored exclusively in your phone's memory and is never transmitted elsewhere.",
+        biometricSecurityText: "<strong>Biometric Authentication</strong>: If enabled, it uses your device's security mechanisms to protect access.",
+        securityAdviceText: "We recommend using a strong password and securing your device to ensure the safety of your data.",
+        dataSharingTitle: "Data Sharing",
+        dataSharingText: "<strong>We do not share or transmit your data to third parties</strong>. Since all data is stored exclusively on your device, there is no sharing or transfer of information outside your phone.",
+        userRightsTitle: "Your Rights",
+        userRightsText: "You have full control over your data, which you can manage directly in the application:",
+        accessText: "<strong>Access</strong>: You can view and edit your saved data within the application.",
+        deletionText: "<strong>Deletion</strong>: You can delete your accounts and data using the logout or account deletion functions.",
+        portabilityText: "<strong>Portability</strong>: You can export your data in JSON format using the export function for backups.",
+        contactRightsText: "For further information or assistance, contact us at <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>.",
+        policyChangesTitle: "Changes to the Privacy Policy",
+        policyChangesText: "We reserve the right to update this Privacy Policy. Any changes will be posted on this page with an indication of the update date. We recommend checking this page periodically.",
+        lastUpdateText: "<strong>Last Updated</strong>: July 27, 2025",
+        contactTitle: "Contact Us",
+        contactText: "For questions or concerns about our Privacy Policy, contact us at:<br>Email: <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>"
+      },
+      fr: {
+        title: "Politique de Confidentialité - Memorino Account Pro",
+        introTitle: "Introduction",
+        introText: "Bienvenue dans Memorino Account Pro. Votre confidentialité est notre priorité. Memorino Account Pro est une application conçue pour gérer vos identifiants de manière sécurisée directement sur votre appareil. <strong>Nous ne collectons ni ne stockons aucune donnée personnelle sur des serveurs distants</strong>. Toutes les données que vous saisissez restent exclusivement dans la mémoire de votre téléphone.",
+        dataStoredTitle: "Données Stockées",
+        dataStoredText1: "Memorino Account Pro ne collecte pas de données personnelles. Les données suivantes sont stockées exclusivement dans la mémoire locale de votre appareil :",
+        accountDataText: "<strong>Données du compte</strong> : Nom d'utilisateur, email et mot de passe que vous saisissez pour créer et accéder à votre compte dans l'application.",
+        credentialsText: "<strong>Identifiants enregistrés</strong> : Noms des comptes, emails, mots de passe et étiquettes associées que vous choisissez d'enregistrer, tous cryptés localement sur votre appareil.",
+        biometricDataText: "<strong>Données biométriques</strong> : Si vous utilisez l'authentification biométrique, les données biométriques ne sont pas stockées par nous mais sont gérées uniquement par le système d'exploitation de votre appareil.",
+        dataStoredText2: "<strong>Aucune donnée n'est envoyée à des serveurs distants ou partagée avec des tiers.</strong> L'application fonctionne entièrement hors ligne, garantissant que vos données restent sur votre appareil.",
+        dataUsageTitle: "Comment Nous Utilisons Vos Données",
+        dataUsageText: "Les données que vous saisissez sont utilisées uniquement pour :",
+        functionalityText: "Fournir les fonctionnalités de l'application, comme enregistrer et gérer vos identifiants de manière sécurisée.",
+        securityText: "Protéger l'accès grâce au cryptage AES-256 et à l'authentification biométrique (si activée).",
+        backupText: "Permettre l'importation/exportation des données au format JSON pour la sauvegarde et la restauration, stockées localement sur votre appareil.",
+        dataSecurityTitle: "Sécurité des Données",
+        dataSecurityText: "Nous mettons en œuvre des mesures de sécurité avancées pour protéger vos données sur votre appareil :",
+        encryptionText: "<strong>Cryptage</strong> : Tous les identifiants sont cryptés à l'aide d'AES-256 avec une clé dérivée de votre mot de passe, stockée uniquement sur votre appareil.",
+        localStorageText: "<strong>Stockage local</strong> : Toutes les données sont stockées exclusivement dans la mémoire de votre téléphone et ne sont jamais transmises ailleurs.",
+        biometricSecurityText: "<strong>Authentification biométrique</strong> : Si activée, elle utilise les mécanismes de sécurité de votre appareil pour protéger l'accès.",
+        securityAdviceText: "Nous vous recommandons d'utiliser un mot de passe fort et de sécuriser votre appareil pour garantir la sécurité de vos données.",
+        dataSharingTitle: "Partage des Données",
+        dataSharingText: "<strong>Nous ne partageons ni ne transmettons vos données à des tiers</strong>. Étant donné que toutes les données sont stockées exclusivement sur votre appareil, il n'y a aucun partage ou transfert d'informations en dehors de votre téléphone.",
+        userRightsTitle: "Vos Droits",
+        userRightsText: "Vous avez un contrôle total sur vos données, que vous pouvez gérer directement dans l'application :",
+        accessText: "<strong>Accès</strong> : Vous pouvez consulter et modifier vos données enregistrées dans l'application.",
+        deletionText: "<strong>Suppression</strong> : Vous pouvez supprimer vos comptes et données via les fonctions de déconnexion ou de suppression de compte.",
+        portabilityText: "<strong>Portabilité</strong> : Vous pouvez exporter vos données au format JSON à l'aide de la fonction d'exportation pour les sauvegardes.",
+        contactRightsText: "Pour plus d'informations ou d'assistance, contactez-nous à <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>.",
+        policyChangesTitle: "Modifications de la Politique de Confidentialité",
+        policyChangesText: "Nous nous réservons le droit de mettre à jour cette politique de confidentialité. Toute modification sera publiée sur cette page avec l'indication de la date de mise à jour. Nous vous recommandons de vérifier cette page régulièrement.",
+        lastUpdateText: "<strong>Dernière mise à jour</strong> : 27 juillet 2025",
+        contactTitle: "Contactez-nous",
+        contactText: "Pour toute question ou préoccupation concernant notre politique de confidentialité, contactez-nous à :<br>Email : <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>"
+      },
+      de: {
+        title: "Datenschutzrichtlinie - Memorino Account Pro",
+        introTitle: "Einführung",
+        introText: "Willkommen bei Memorino Account Pro. Ihr Datenschutz ist unsere Priorität. Memorino Account Pro ist eine Anwendung, die entwickelt wurde, um Ihre Zugangsdaten sicher direkt auf Ihrem Gerät zu verwalten. <strong>Wir sammeln oder speichern keine persönlichen Daten auf entfernten Servern</strong>. Alle von Ihnen eingegebenen Daten bleiben ausschließlich im Speicher Ihres Telefons.",
+        dataStoredTitle: "Gespeicherte Daten",
+        dataStoredText1: "Memorino Account Pro sammelt keine persönlichen Daten. Die folgenden Daten werden ausschließlich im lokalen Speicher Ihres Geräts gespeichert:",
+        accountDataText: "<strong>Kontodaten</strong>: Benutzername, E-Mail und Passwort, die Sie eingeben, um Ihr Konto in der Anwendung zu erstellen und darauf zuzugreifen.",
+        credentialsText: "<strong>Gespeicherte Zugangsdaten</strong>: Kontonamen, E-Mails, Passwörter und zugehörige Tags, die Sie speichern möchten, alle lokal auf Ihrem Gerät verschlüsselt.",
+        biometricDataText: "<strong>Biometrische Daten</strong>: Wenn Sie die biometrische Authentifizierung verwenden, werden biometrische Daten nicht von uns gespeichert, sondern ausschließlich vom Betriebssystem Ihres Geräts verwaltet.",
+        dataStoredText2: "<strong>Keine Daten werden an entfernte Server gesendet oder mit Dritten geteilt.</strong> Die Anwendung funktioniert vollständig offline und stellt sicher, dass Ihre Daten auf Ihrem Gerät bleiben.",
+        dataUsageTitle: "Wie Wir Ihre Daten Verwenden",
+        dataUsageText: "Die von Ihnen eingegebenen Daten werden ausschließlich verwendet für:",
+        functionalityText: "Bereitstellung der Funktionen der Anwendung, wie das sichere Speichern und Verwalten Ihrer Zugangsdaten.",
+        securityText: "Schutz des Zugriffs durch AES-256-Verschlüsselung und biometrische Authentifizierung (falls aktiviert).",
+        backupText: "Ermöglichung des Imports/Exports von Daten im JSON-Format für Sicherungen und Wiederherstellungen, die lokal auf Ihrem Gerät gespeichert werden.",
+        dataSecurityTitle: "Datensicherheit",
+        dataSecurityText: "Wir setzen fortschrittliche Sicherheitsmaßnahmen ein, um Ihre Daten auf Ihrem Gerät zu schützen:",
+        encryptionText: "<strong>Verschlüsselung</strong>: Alle Zugangsdaten werden mit AES-256 verschlüsselt, wobei ein Schlüssel verwendet wird, der aus Ihrem Passwort abgeleitet und nur auf Ihrem Gerät gespeichert wird.",
+        localStorageText: "<strong>Lokale Speicherung</strong>: Alle Daten werden ausschließlich im Speicher Ihres Telefons gespeichert und niemals woanders übertragen.",
+        biometricSecurityText: "<strong>Biometrische Authentifizierung</strong>: Falls aktiviert, verwendet sie die Sicherheitsmechanismen Ihres Geräts, um den Zugriff zu schützen.",
+        securityAdviceText: "Wir empfehlen, ein starkes Passwort zu verwenden und Ihr Gerät zu sichern, um die Sicherheit Ihrer Daten zu gewährleisten.",
+        dataSharingTitle: "Datenweitergabe",
+        dataSharingText: "<strong>Wir geben Ihre Daten nicht an Dritte weiter oder übertragen sie</strong>. Da alle Daten ausschließlich auf Ihrem Gerät gespeichert sind, gibt es kein Teilen oder Übertragen von Informationen außerhalb Ihres Telefons.",
+        userRightsTitle: "Ihre Rechte",
+        userRightsText: "Sie haben die volle Kontrolle über Ihre Daten, die Sie direkt in der Anwendung verwalten können:",
+        accessText: "<strong>Zugang</strong>: Sie können Ihre gespeicherten Daten in der Anwendung einsehen und bearbeiten.",
+        deletionText: "<strong>Löschung</strong>: Sie können Ihre Konten und Daten über die Abmelde- oder Kontolöschfunktionen löschen.",
+        portabilityText: "<strong>Portabilität</strong>: Sie können Ihre Daten im JSON-Format über die Exportfunktion für Backups exportieren.",
+        contactRightsText: "Für weitere Informationen oder Unterstützung kontaktieren Sie uns unter <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>.",
+        policyChangesTitle: "Änderungen der Datenschutzrichtlinie",
+        policyChangesText: "Wir behalten uns das Recht vor, diese Datenschutzrichtlinie zu aktualisieren. Änderungen werden auf dieser Seite mit einem Hinweis auf das Aktualisierungsdatum veröffentlicht. Wir empfehlen, diese Seite regelmäßig zu überprüfen.",
+        lastUpdateText: "<strong>Zuletzt aktualisiert</strong>: 27. Juli 2025",
+        contactTitle: "Kontaktieren Sie uns",
+        contactText: "Für Fragen oder Bedenken zu unserer Datenschutzrichtlinie kontaktieren Sie uns unter:<br>E-Mail: <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>"
+      },
+      es: {
+        title: "Política de Privacidad - Memorino Account Pro",
+        introTitle: "Introducción",
+        introText: "Bienvenido a Memorino Account Pro. Tu privacidad es nuestra prioridad. Memorino Account Pro es una aplicación diseñada para gestionar tus credenciales de manera segura directamente en tu dispositivo. <strong>No recopilamos ni almacenamos ningún dato personal en servidores remotos</strong>. Todos los datos que introduces permanecen exclusivamente en la memoria de tu teléfono.",
+        dataStoredTitle: "Datos Almacenados",
+        dataStoredText1: "Memorino Account Pro no recopila datos personales. Los siguientes datos se almacenan exclusivamente en la memoria local de tu dispositivo:",
+        accountDataText: "<strong>Datos de la cuenta</strong>: Nombre de usuario, correo electrónico y contraseña que introduces para crear y acceder a tu cuenta en la aplicación.",
+        credentialsText: "<strong>Credenciales guardadas</strong>: Nombres de cuentas, correos electrónicos, contraseñas y etiquetas asociadas que eliges guardar, todos cifrados localmente en tu dispositivo.",
+        biometricDataText: "<strong>Datos biométricos</strong>: Si utilizas la autenticación biométrica, los datos biométricos no son almacenados por nosotros, sino que son gestionados únicamente por el sistema operativo de tu dispositivo.",
+        dataStoredText2: "<strong>Ningún dato se envía a servidores remotos ni se comparte con terceros.</strong> La aplicación funciona completamente sin conexión, asegurando que tus datos permanezcan en tu dispositivo.",
+        dataUsageTitle: "Cómo Usamos Tus Datos",
+        dataUsageText: "Los datos que introduces se utilizan exclusivamente para:",
+        functionalityText: "Proporcionar las funcionalidades de la aplicación, como guardar y gestionar tus credenciales de manera segura.",
+        securityText: "Proteger el acceso mediante cifrado AES-256 y autenticación biométrica (si está habilitada).",
+        backupText: "Permitir la importación/exportación de datos en formato JSON para copias de seguridad y restauración, almacenados localmente en tu dispositivo.",
+        dataSecurityTitle: "Seguridad de los Datos",
+        dataSecurityText: "Implementamos medidas de seguridad avanzadas para proteger tus datos en tu dispositivo:",
+        encryptionText: "<strong>Cifrado</strong>: Todas las credenciales están cifradas usando AES-256 con una clave derivada de tu contraseña, almacenada únicamente en tu dispositivo.",
+        localStorageText: "<strong>Almacenamiento local</strong>: Todos los datos se almacenan exclusivamente en la memoria de tu teléfono y nunca se transmiten a otro lugar.",
+        biometricSecurityText: "<strong>Autenticación biométrica</strong>: Si está habilitada, utiliza los mecanismos de seguridad de tu dispositivo para proteger el acceso.",
+        securityAdviceText: "Te recomendamos usar una contraseña fuerte y asegurar tu dispositivo para garantizar la seguridad de tus datos.",
+        dataSharingTitle: "Compartir Datos",
+        dataSharingText: "<strong>No compartimos ni transmitimos tus datos a terceros</strong>. Dado que todos los datos se almacenan exclusivamente en tu dispositivo, no hay intercambio ni transferencia de información fuera de tu teléfono.",
+        userRightsTitle: "Tus Derechos",
+        userRightsText: "Tienes control total sobre tus datos, que puedes gestionar directamente en la aplicación:",
+        accessText: "<strong>Acceso</strong>: Puedes ver y editar tus datos guardados dentro de la aplicación.",
+        deletionText: "<strong>Eliminación</strong>: Puedes eliminar tus cuentas y datos mediante las funciones de cerrar sesión o eliminación de cuenta.",
+        portabilityText: "<strong>Portabilidad</strong>: Puedes exportar tus datos en formato JSON usando la función de exportación para copias de seguridad.",
+        contactRightsText: "Para más información o asistencia, contáctanos en <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>.",
+        policyChangesTitle: "Cambios en la Política de Privacidad",
+        policyChangesText: "Nos reservamos el derecho de actualizar esta política de privacidad. Cualquier cambio se publicará en esta página con una indicación de la fecha de actualización. Te recomendamos revisar esta página periódicamente.",
+        lastUpdateText: "<strong>Última actualización</strong>: 27 de julio de 2025",
+        contactTitle: "Contáctanos",
+        contactText: "Para preguntas o inquietudes sobre nuestra política de privacidad, contáctanos en:<br>Correo electrónico: <a href='mailto:astorinofabio86@gmail.com'>astorinofabio86@gmail.com</a>"
+      }
+    };
+
+    // Stato lingua
+    let currentLanguage = localStorage.getItem('language') || 'it';
+
+    // Funzione per aggiornare il testo
+    function updateUI() {
+      document.documentElement.lang = currentLanguage;
+      document.getElementById('title').textContent = translations[currentLanguage].title;
+      document.getElementById('introTitle').textContent = translations[currentLanguage].introTitle;
+      document.getElementById('introText').innerHTML = translations[currentLanguage].introText;
+      document.getElementById('dataStoredTitle').textContent = translations[currentLanguage].dataStoredTitle;
+      document.getElementById('dataStoredText1').textContent = translations[currentLanguage].dataStoredText1;
+      document.getElementById('accountDataText').innerHTML = translations[currentLanguage].accountDataText;
+      document.getElementById('credentialsText').innerHTML = translations[currentLanguage].credentialsText;
+      document.getElementById('biometricDataText').innerHTML = translations[currentLanguage].biometricDataText;
+      document.getElementById('dataStoredText2').innerHTML = translations[currentLanguage].dataStoredText2;
+      document.getElementById('dataUsageTitle').textContent = translations[currentLanguage].dataUsageTitle;
+      document.getElementById('dataUsageText').textContent = translations[currentLanguage].dataUsageText;
+      document.getElementById('functionalityText').textContent = translations[currentLanguage].functionalityText;
+      document.getElementById('securityText').textContent = translations[currentLanguage].securityText;
+      document.getElementById('backupText').textContent = translations[currentLanguage].backupText;
+      document.getElementById('dataSecurityTitle').textContent = translations[currentLanguage].dataSecurityTitle;
+      document.getElementById('dataSecurityText').textContent = translations[currentLanguage].dataSecurityText;
+      document.getElementById('encryptionText').innerHTML = translations[currentLanguage].encryptionText;
+      document.getElementById('localStorageText').innerHTML = translations[currentLanguage].localStorageText;
+      document.getElementById('biometricSecurityText').innerHTML = translations[currentLanguage].biometricSecurityText;
+      document.getElementById('securityAdviceText').textContent = translations[currentLanguage].securityAdviceText;
+      document.getElementById('dataSharingTitle').textContent = translations[currentLanguage].dataSharingTitle;
+      document.getElementById('dataSharingText').innerHTML = translations[currentLanguage].dataSharingText;
+      document.getElementById('userRightsTitle').textContent = translations[currentLanguage].userRightsTitle;
+      document.getElementById('userRightsText').textContent = translations[currentLanguage].userRightsText;
+      document.getElementById('accessText').innerHTML = translations[currentLanguage].accessText;
+      document.getElementById('deletionText').innerHTML = translations[currentLanguage].deletionText;
+      document.getElementById('portabilityText').innerHTML = translations[currentLanguage].portabilityText;
+      document.getElementById('contactRightsText').innerHTML = translations[currentLanguage].contactRightsText;
+      document.getElementById('policyChangesTitle').textContent = translations[currentLanguage].policyChangesTitle;
+      document.getElementById('policyChangesText').textContent = translations[currentLanguage].policyChangesText;
+      document.getElementById('lastUpdateText').innerHTML = translations[currentLanguage].lastUpdateText;
+      document.getElementById('contactTitle').textContent = translations[currentLanguage].contactTitle;
+      document.getElementById('contactText').innerHTML = translations[currentLanguage].contactText;
+      document.getElementById('languageToggle').textContent = {
+        it: '🇮🇹', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪', es: '🇪🇸'
+      }[currentLanguage];
+    }
+
+    // Gestione cambio lingua
+    document.getElementById('languageToggle').addEventListener('click', () => {
+      const selector = document.getElementById('languageSelector');
+      selector.style.display = selector.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.querySelectorAll('.language-selector button').forEach(button => {
+      button.addEventListener('click', () => {
+        currentLanguage = button.getAttribute('data-lang');
+        localStorage.setItem('language', currentLanguage);
+        updateUI();
+        document.getElementById('languageSelector').style.display = 'none';
+      });
+    });
+
+    // Tema
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark');
+      document.body.classList.toggle('dark');
+      document.getElementById('themeToggle').textContent = isDark ? '🌞' : '🌙';
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+
+    // Inizializzazione
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').textContent = '🌙';
+      }
+      updateUI();
+    });
+  </script>
+</body>
+</html>
