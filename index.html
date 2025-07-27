@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Memorino Account PRO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://unpkg.com/@capacitor/core@latest/dist/capacitor.js"></script>
+  <style>
+    :root {
+      --primary-color: #1976d2;
+      --primary-hover: #1565c0;
+      --danger-color: #e53935;
+      --warning-color: #ff9800;
+      --bg-light: #f9f9f9;
+      --text-light: #333;
+      --card-light: #fff;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --bg-dark: #121212;
+      --text-dark: #eee;
+      --card-dark: #1e1e1e;
+      --shadow-dark: rgba(255, 255, 255, 0.08);
+      --error-color: #d32f2f;
+      --success-color: #2e7d32;
+      --pro-color: #9c27b0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 3rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      position: relative;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      text-align: center;
+      order: 1;
+      margin: 0.5rem 0;
+    }
+    body.dark h1 {
+      color: var(--primary-hover);
+    }
+
+    .theme-language-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      order: 2;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+
+    #themeToggle, #languageToggle {
+      cursor: pointer;
+      font-size: 1.8rem;
+      user-select: none;
+      transition: color 0.3s ease;
+      color: var(--primary-color);
+      background: none;
+      border: none;
+      padding: 0.5rem;
+    }
+    body.dark #themeToggle, body.dark #languageToggle {
+      color: var(--primary-hover);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .card {
+      background-color: var(--card-light);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px var(--shadow-light);
+      border: 1px solid #e0e0e0;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    body.dark .card {
+      background-color: var(--card-dark);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+      border-color: #333;
+    }
+
+    input, button, select {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.8rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 6px var(--primary-color);
+    }
+    body.dark input, body.dark select {
+      background: #2a2a2a;
+      border-color: #555;
+      color: var(--text-dark);
+    }
+    body.dark input:focus, body.dark select:focus {
+      border-color: var(--primary-hover);
+      box-shadow: 0 0 6px var(--primary-hover);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .logout {
+      background-color: var(--danger-color);
+      margin-top: 1rem;
+    }
+    .logout:hover {
+      background-color: #b71c1c;
+    }
+
+    .pro-badge {
+      background-color: var(--pro-color);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+      display: inline-block;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    body.dark .error-message {
+      color: #ef5350;
+    }
+
+    .success-message {
+      color: var(--success-color);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    body.dark .success-message {
+      color: #81c784;
+    }
+
+    .welcome-message {
+      font-weight: 600;
+      color: var(--success-color);
+      text-align: center;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    body.dark .welcome-message {
+      color: #81c784;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-container input {
+      flex: 1;
+      margin-top: 0;
+    }
+
+    .search-container select {
+      width: auto;
+      margin-top: 0;
+    }
+
+    .account-item {
+      background: var(--card-light);
+      border-radius: 12px;
+      box-shadow: 0 3px 10px var(--shadow-light);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    body.dark .account-item {
+      background: var(--card-dark);
+      box-shadow: 0 3px 10px var(--shadow-dark);
+    }
+
+    .account-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .account-name {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      user-select: text;
+      word-break: break-word;
+    }
+    body.dark .account-name {
+      color: var(--primary-hover);
+    }
+
+    .account-email {
+      font-size: 1rem;
+      color: var(--text-light);
+      user-select: text;
+      word-break: break-all;
+      padding: 0.5rem 0;
+    }
+    body.dark .account-email {
+      color: var(--text-dark);
+    }
+
+    .account-password-container {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+
+    .account-password {
+      width: 100%;
+      padding: 0.8rem 2.5rem 0.8rem 1rem;
+      font-family: monospace;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.05);
+      color: inherit;
+      user-select: text;
+      word-break: break-all;
+    }
+    body.dark .account-password {
+      border-color: #555;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .account-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+    body.dark .tag {
+      background-color: var(--primary-hover);
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .toggle-password:hover {
+      color: var(--primary-hover);
+    }
+    body.dark .toggle-password {
+      color: var(--primary-hover);
+    }
+
+    .account-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      color: var(--danger-color);
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+    .btn-delete:hover {
+      background-color: rgba(229, 57, 53, 0.15);
+    }
+    .btn-delete svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn-edit {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      color: var(--primary-color);
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+    .btn-edit:hover {
+      background-color: rgba(25, 118, 210, 0.15);
+    }
+    .btn-edit svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tag-input-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .tag-input {
+      flex: 1;
+    }
+
+    .add-tag-btn {
+      width: auto;
+      padding: 0 1rem;
+      background-color: var(--warning-color);
+    }
+    .add-tag-btn:hover {
+      background-color: #e68a00;
+    }
+
+    .import-export-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .import-export-container button {
+      flex: 1;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .file-input-wrapper input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      left: 0;
+      top: 0;
+      cursor: pointer;
+    }
+
+    #importFile:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .biometric-btn {
+      background-color: #4caf50;
+      margin-top: 1rem;
+    }
+    .biometric-btn:hover {
+      background-color: #388e3c;
+    }
+
+    .setup-biometric-btn {
+      background-color: #607d8b;
+      margin-top: 0.5rem;
+    }
+    .setup-biometric-btn:hover {
+      background-color: #455a64;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      
+      .container {
+        gap: 1.2rem;
+      }
+      
+      .card {
+        padding: 1.2rem;
+        border-radius: 12px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      input, button, select {
+        padding: 0.7rem;
+        margin-top: 0.6rem;
+        font-size: 0.95rem;
+      }
+      
+      .search-container {
+        flex-direction: column;
+      }
+      
+      .search-container select {
+        width: 100%;
+      }
+      
+      .account-name {
+        font-size: 1.1rem;
+      }
+      
+      .account-email, .account-password {
+        font-size: 0.95rem;
+      }
+      
+      .toggle-password {
+        font-size: 1.1rem;
+      }
+      
+      .btn-delete, .btn-edit {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .btn-delete svg, .btn-edit svg {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .tag-input-container {
+        flex-direction: column;
+      }
+      
+      .add-tag-btn {
+        width: 100%;
+      }
+      
+      .import-export-container {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .card {
+        padding: 1rem;
+      }
+      
+      input, button, select {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+      
+      .account-name {
+        font-size: 1rem;
+      }
+      
+      .account-email, .account-password {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="appTitle">Memorino Account PRO</h1>
+    <div class="theme-language-container">
+      <button id="themeToggle" title="Cambia tema" aria-label="Cambia tema">
+        <span class="visually-hidden">Cambia tema</span>
+        <span class="theme-icon">🌞</span>
+      </button>
+      <button id="languageToggle" title="Cambia lingua" aria-label="Cambia lingua">
+        <span class="visually-hidden">Cambia lingua</span>
+        <span id="languageIcon">🇮🇹</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card" id="loginContainer">
+      <input type="text" id="username" placeholder="Nome utente" autocomplete="username" />
+      <input type="password" id="userpass" placeholder="Password" autocomplete="current-password" />
+      <div class="error-message" id="errorMessage"></div>
+      <button id="loginBtn">Accedi</button>
+      <button id="biometricLoginBtn" class="biometric-btn" style="display:none;">Accedi con Biometria</button>
+      <button id="setupBiometricBtn" class="setup-biometric-btn" style="display:none;">Configura Autenticazione Biometrica</button>
+    </div>
+
+    <div class="card" id="mainApp" style="display:none;">
+      <div class="welcome-message" id="welcomeMessage"></div>
+      
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca account..." />
+        <select id="tagFilter">
+          <option value="">Tutte le etichette</option>
+        </select>
+      </div>
+      
+      <input type="text" id="accountName" placeholder="Nome Account" autocomplete="off" />
+      <input type="email" id="accountEmail" placeholder="Email" autocomplete="email" />
+      <input type="password" id="accountPassword" placeholder="Password" autocomplete="new-password" />
+      
+      <div class="tag-input-container">
+        <input type="text" id="tagInput" class="tag-input" placeholder="Aggiungi etichetta" />
+        <button id="addTagBtn" class="add-tag-btn">+</button>
+      </div>
+      <div id="tagsPreview" class="account-tags"></div>
+      
+      <div class="error-message" id="accountErrorMessage"></div>
+      <div class="success-message" id="accountSuccessMessage"></div>
+      <button id="saveAccountBtn" disabled>Salva Account</button>
+      
+      <div class="import-export-container">
+        <button onclick="exportData()">Esporta Dati</button>
+        <div class="file-input-wrapper">
+          <button>Importa Dati</button>
+          <input type="file" id="importFile" accept="application/json" onchange="importData(event)" />
+        </div>
+      </div>
+      
+      <button class="logout" id="logoutBtn">Logout</button>
+    </div>
+
+    <div id="accountList" style="display:none;"></div>
+  </div>
+
+  <script>
+    // Dizionari per il multilinguaggio
+    const translations = {
+      it: {
+        appTitle: "MemorinoAccount PRO",
+        themeToggle: "Cambia tema",
+        languageToggle: "Cambia lingua",
+        loginPlaceholder: "Nome utente",
+        passwordPlaceholder: "Password",
+        loginBtn: "Accedi",
+        biometricLogin: "Accedi con Biometria",
+        welcome: "Benvenuto, {username}!",
+        searchPlaceholder: "Cerca account...",
+        allTags: "Tutte le etichette",
+        accountNamePlaceholder: "Nome Account",
+        emailPlaceholder: "Email",
+        accountPasswordPlaceholder: "Password",
+        tagPlaceholder: "Aggiungi etichetta",
+        saveAccountBtn: "Salva Account",
+        exportBtn: "Esporta Dati",
+        importBtn: "Importa Dati",
+        logoutBtn: "Logout",
+        saving: "Salvataggio...",
+        accountUpdated: "Account aggiornato!",
+        accountSaved: "Account salvato!",
+        fillAllFields: "Compila tutti i campi",
+        invalidEmail: "Inserisci un'email valida",
+        deleteConfirm: "Eliminare \"{name}\"?",
+        exportError: "Errore nell'esportazione",
+        importSuccess: "Importati {count} account",
+        importError: "Errore nell'importazione",
+        loginError: "Effettua il login",
+        biometricNotSupported: "Biometria non supportata",
+        biometricError: "Autenticazione biometrica fallita",
+        proBadge: "PRO",
+        biometricReason: "Accedi con biometria",
+        cancel: "Annulla",
+        noBiometricAccount: "Nessun account configurato per il login biometrico",
+        setupBiometric: "Configura autenticazione biometrica",
+        biometricSetupSuccess: "Autenticazione biometrica configurata con successo!",
+        biometricSetupError: "Errore nella configurazione biometrica",
+        fillPasswordFirst: "Inserisci prima la password"
+      },
+      en: {
+        appTitle: "Account Keeper PRO",
+        themeToggle: "Toggle theme",
+        languageToggle: "Change language",
+        loginPlaceholder: "Username",
+        passwordPlaceholder: "Password",
+        loginBtn: "Login",
+        biometricLogin: "Login with Biometrics",
+        welcome: "Welcome, {username}!",
+        searchPlaceholder: "Search accounts...",
+        allTags: "All tags",
+        accountNamePlaceholder: "Account Name",
+        emailPlaceholder: "Email",
+        accountPasswordPlaceholder: "Password",
+        tagPlaceholder: "Add tag",
+        saveAccountBtn: "Save Account",
+        exportBtn: "Export Data",
+        importBtn: "Import Data",
+        logoutBtn: "Logout",
+        saving: "Saving...",
+        accountUpdated: "Account updated!",
+        accountSaved: "Account saved!",
+        fillAllFields: "Fill all fields",
+        invalidEmail: "Enter a valid email",
+        deleteConfirm: "Delete \"{name}\"?",
+        exportError: "Export error",
+        importSuccess: "Imported {count} accounts",
+        importError: "Import error",
+        loginError: "Please login",
+        biometricNotSupported: "Biometrics not supported",
+        biometricError: "Biometric authentication failed",
+        proBadge: "PRO",
+        biometricReason: "Login with biometrics",
+        cancel: "Cancel",
+        noBiometricAccount: "No account configured for biometric login",
+        setupBiometric: "Setup Biometric Authentication",
+        biometricSetupSuccess: "Biometric authentication setup successful!",
+        biometricSetupError: "Error setting up biometric authentication",
+        fillPasswordFirst: "Enter password first"
+      },
+      fr: {
+        appTitle: "Gestionnaire de Comptes PRO",
+        themeToggle: "Changer le thème",
+        languageToggle: "Changer la langue",
+        loginPlaceholder: "Nom d'utilisateur",
+        passwordPlaceholder: "Mot de passe",
+        loginBtn: "Connexion",
+        biometricLogin: "Connexion biométrique",
+        welcome: "Bienvenue, {username}!",
+        searchPlaceholder: "Rechercher des comptes...",
+        allTags: "Tous les tags",
+        accountNamePlaceholder: "Nom du compte",
+        emailPlaceholder: "Email",
+        accountPasswordPlaceholder: "Mot de passe",
+        tagPlaceholder: "Ajouter un tag",
+        saveAccountBtn: "Enregistrer",
+        exportBtn: "Exporter",
+        importBtn: "Importer",
+        logoutBtn: "Déconnexion",
+        saving: "Enregistrement...",
+        accountUpdated: "Compte mis à jour!",
+        accountSaved: "Compte enregistré!",
+        fillAllFields: "Remplissez tous les champs",
+        invalidEmail: "Entrez un email valide",
+        deleteConfirm: "Supprimer \"{name}\"?",
+        exportError: "Erreur d'exportation",
+        importSuccess: "{count} comptes importés",
+        importError: "Erreur d'importation",
+        loginError: "Veuillez vous connecter",
+        biometricNotSupported: "Biométrie non supportée",
+        biometricError: "Authentification biométrique échouée",
+        proBadge: "PRO",
+        biometricReason: "Connexion biométrique",
+        cancel: "Annuler",
+        noBiometricAccount: "Aucun compte configuré pour la connexion biométrique",
+        setupBiometric: "Configurer l'authentification biométrique",
+        biometricSetupSuccess: "Authentification biométrique configurée avec succès!",
+        biometricSetupError: "Erreur de configuration biométrique",
+        fillPasswordFirst: "Entrez d'abord le mot de passe"
+      },
+      de: {
+        appTitle: "Konto-Verwalter PRO",
+        themeToggle: "Thema wechseln",
+        languageToggle: "Sprache ändern",
+        loginPlaceholder: "Benutzername",
+        passwordPlaceholder: "Passwort",
+        loginBtn: "Anmelden",
+        biometricLogin: "Mit Biometrie anmelden",
+        welcome: "Willkommen, {username}!",
+        searchPlaceholder: "Konten suchen...",
+        allTags: "Alle Tags",
+        accountNamePlaceholder: "Kontoname",
+        emailPlaceholder: "Email",
+        accountPasswordPlaceholder: "Passwort",
+        tagPlaceholder: "Tag hinzufügen",
+        saveAccountBtn: "Konto speichern",
+        exportBtn: "Daten exportieren",
+        importBtn: "Daten importieren",
+        logoutBtn: "Abmelden",
+        saving: "Wird gespeichert...",
+        accountUpdated: "Konto aktualisiert!",
+        accountSaved: "Konto gespeichert!",
+        fillAllFields: "Füllen Sie alle Felder aus",
+        invalidEmail: "Gültige Email eingeben",
+        deleteConfirm: "\"{name}\" löschen?",
+        exportError: "Exportfehler",
+        importSuccess: "{count} Konten importiert",
+        importError: "Importfehler",
+        loginError: "Bitte anmelden",
+        biometricNotSupported: "Biometrie nicht unterstützt",
+        biometricError: "Biometrische Authentifizierung fehlgeschlagen",
+        proBadge: "PRO",
+        biometricReason: "Mit Biometrie anmelden",
+        cancel: "Abbrechen",
+        noBiometricAccount: "Kein Konto für biometrische Anmeldung konfiguriert",
+        setupBiometric: "Biometrische Authentifizierung einrichten",
+        biometricSetupSuccess: "Biometrische Authentifizierung erfolgreich eingerichtet!",
+        biometricSetupError: "Fehler beim Einrichten der biometrischen Authentifizierung",
+        fillPasswordFirst: "Geben Sie zuerst das Passwort ein"
+      },
+      es: {
+        appTitle: "Administrador de Cuentas PRO",
+        themeToggle: "Cambiar tema",
+        languageToggle: "Cambiar idioma",
+        loginPlaceholder: "Nombre de usuario",
+        passwordPlaceholder: "Contraseña",
+        loginBtn: "Iniciar sesión",
+        biometricLogin: "Iniciar con biometría",
+        welcome: "¡Bienvenido, {username}!",
+        searchPlaceholder: "Buscar cuentas...",
+        allTags: "Todas las etiquetas",
+        accountNamePlaceholder: "Nombre de cuenta",
+        emailPlaceholder: "Email",
+        accountPasswordPlaceholder: "Contraseña",
+        tagPlaceholder: "Añadir etiqueta",
+        saveAccountBtn: "Guardar cuenta",
+        exportBtn: "Exportar datos",
+        importBtn: "Importar datos",
+        logoutBtn: "Cerrar sesión",
+        saving: "Guardando...",
+        accountUpdated: "¡Cuenta actualizada!",
+        accountSaved: "¡Cuenta guardada!",
+        fillAllFields: "Complete todos los campos",
+        invalidEmail: "Ingrese un email válido",
+        deleteConfirm: "¿Eliminar \"{name}\"?",
+        exportError: "Error al exportar",
+        importSuccess: "{count} cuentas importadas",
+        importError: "Error al importar",
+        loginError: "Por favor inicie sesión",
+        biometricNotSupported: "Biometría no compatible",
+        biometricError: "Autenticación biométrica fallida",
+        proBadge: "PRO",
+        biometricReason: "Iniciar sesión con biometría",
+        cancel: "Cancelar",
+        noBiometricAccount: "Ninguna cuenta configurada para inicio biométrico",
+        setupBiometric: "Configurar autenticación biométrica",
+        biometricSetupSuccess: "¡Autenticación biométrica configurada con éxito!",
+        biometricSetupError: "Error al configurar autenticación biométrica",
+        fillPasswordFirst: "Ingrese primero la contraseña"
+      }
+    };
+
+    const languageFlags = {
+      it: "🇮🇹",
+      en: "🇬🇧",
+      fr: "🇫🇷",
+      de: "🇩🇪",
+      es: "🇪🇸"
+    };
+
+    // Stato dell'applicazione
+    let currentUser = null;
+    let currentKey = null;
+    let currentLanguage = localStorage.getItem('language') || 'it';
+    let currentTags = [];
+    let allTags = new Set();
+    let editingAccountIndex = -1;
+
+    // Funzione per tradurre il testo
+    function translate(key, params = {}) {
+      let translation = translations[currentLanguage][key] || key;
+      for (const [param, value] of Object.entries(params)) {
+        translation = translation.replace(`{${param}}`, value);
+      }
+      return translation;
+    }
+
+    // Aggiorna l'interfaccia con la lingua corrente
+    function updateUI() {
+      document.getElementById('appTitle').textContent = translate('appTitle');
+      document.getElementById('languageIcon').textContent = languageFlags[currentLanguage];
+      document.getElementById('username').placeholder = translate('loginPlaceholder');
+      document.getElementById('userpass').placeholder = translate('passwordPlaceholder');
+      document.getElementById('loginBtn').textContent = translate('loginBtn');
+      document.getElementById('biometricLoginBtn').textContent = translate('biometricLogin');
+      document.getElementById('setupBiometricBtn').textContent = translate('setupBiometric');
+      document.getElementById('searchInput').placeholder = translate('searchPlaceholder');
+      document.getElementById('tagFilter').options[0].text = translate('allTags');
+      document.getElementById('accountName').placeholder = translate('accountNamePlaceholder');
+      document.getElementById('accountEmail').placeholder = translate('emailPlaceholder');
+      document.getElementById('accountPassword').placeholder = translate('accountPasswordPlaceholder');
+      document.getElementById('tagInput').placeholder = translate('tagPlaceholder');
+      document.getElementById('saveAccountBtn').textContent = translate('saveAccountBtn');
+      document.querySelector('button[onclick="exportData()"]').textContent = translate('exportBtn');
+      document.querySelector('.file-input-wrapper button').textContent = translate('importBtn');
+      document.getElementById('logoutBtn').textContent = translate('logoutBtn');
+
+      if (currentUser) {
+        let welcomeMsg = translate('welcome', { username: currentUser });
+        welcomeMsg += `<span class="pro-badge">${translate('proBadge')}</span>`;
+        document.getElementById('welcomeMessage').innerHTML = welcomeMsg;
+      }
+    }
+
+    // Cambia lingua
+    document.getElementById('languageToggle').addEventListener('click', () => {
+      const languages = Object.keys(translations);
+      const currentIndex = languages.indexOf(currentLanguage);
+      const nextIndex = (currentIndex + 1) % languages.length;
+      currentLanguage = languages[nextIndex];
+      localStorage.setItem('language', currentLanguage);
+      updateUI();
+      if (currentUser) loadAccounts();
+    });
+
+    // Funzioni di crittografia
+    const encrypt = (text, key) => {
+      try {
+        if (!text || typeof text !== 'string') throw new Error("Testo non valido");
+        if (!key || typeof key !== 'string') throw new Error("Chiave non valida");
+        return CryptoJS.AES.encrypt(text, key).toString();
+      } catch (e) {
+        console.error("Errore di crittografia:", e);
+        showAccountError(translate('loginError'));
+        return null;
+      }
+    };
+
+    const decrypt = (cipher, key) => {
+      try {
+        if (!cipher || !key) throw new Error("Input non validi");
+        const bytes = CryptoJS.AES.decrypt(cipher, key);
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        if (!decrypted) throw new Error("Decrittazione fallita");
+        return decrypted;
+      } catch (e) {
+        console.error("Errore di decrittazione:", e);
+        return "";
+      }
+    };
+
+    // Funzioni di salvataggio e caricamento
+    function saveUsers(users) {
+      try {
+        localStorage.setItem('users', JSON.stringify(users));
+        return true;
+      } catch (e) {
+        console.error("Errore nel salvataggio:", e);
+        showAccountError("Errore nel salvataggio. Spazio esaurito?");
+        return false;
+      }
+    }
+
+    function getUsers() {
+      try {
+        const data = localStorage.getItem('users');
+        return data ? JSON.parse(data) : {};
+      } catch (e) {
+        console.error("Errore nel caricamento:", e);
+        return {};
+      }
+    }
+
+    // Funzione di hash
+    function hashPassword(password) {
+      try {
+        if (!password) throw new Error("Password vuota");
+        return CryptoJS.SHA256(password).toString();
+      } catch (e) {
+        console.error("Errore hash:", e);
+        return password;
+      }
+    }
+
+    // Gestione messaggi
+    function showError(msg) {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = msg;
+      setTimeout(() => errorMessage.textContent = '', 5000);
+    }
+
+    function showAccountError(msg) {
+      const accountErrorMessage = document.getElementById('accountErrorMessage');
+      accountErrorMessage.textContent = msg;
+      document.getElementById('accountSuccessMessage').textContent = '';
+      setTimeout(() => accountErrorMessage.textContent = '', 5000);
+    }
+
+    function showAccountSuccess(msg) {
+      const accountSuccessMessage = document.getElementById('accountSuccessMessage');
+      accountSuccessMessage.textContent = msg;
+      document.getElementById('accountErrorMessage').textContent = '';
+      setTimeout(() => accountSuccessMessage.textContent = '', 5000);
+    }
+
+    // Login
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('userpass').value;
+
+      if (!user || !pass) {
+        showError(translate('fillAllFields'));
+        return;
+      }
+
+      const users = getUsers();
+      const userHash = hashPassword(pass);
+
+      if (!users[user]) {
+        users[user] = { passHash: userHash, accounts: [], isPro: true }; // Imposta isPro: true di default
+        if (!saveUsers(users)) return;
+      } else if (users[user].passHash !== userHash) {
+        showError(translate('loginError'));
+        return;
+      }
+
+      currentUser = user;
+      currentKey = pass;
+      localStorage.setItem('authUser', user);
+      localStorage.setItem('lastLoginMethod', 'password');
+      initApp();
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('authUser');
+      currentUser = currentKey = null;
+      document.getElementById('accountList').innerHTML = '';
+      document.getElementById('accountList').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('loginContainer').style.display = 'block';
+      document.getElementById('accountName').value = '';
+      document.getElementById('accountEmail').value = '';
+      document.getElementById('accountPassword').value = '';
+      document.getElementById('saveAccountBtn').disabled = true;
+      document.getElementById('errorMessage').textContent = '';
+      document.getElementById('accountErrorMessage').textContent = '';
+      document.getElementById('accountSuccessMessage').textContent = '';
+      updateUI();
+    });
+
+    // Inizializzazione app
+    async function initApp() {
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      
+      let welcomeMsg = translate('welcome', { username: currentUser });
+      welcomeMsg += `<span class="pro-badge">${translate('proBadge')}</span>`;
+      document.getElementById('welcomeMessage').innerHTML = welcomeMsg;
+      
+      // Carica tutti i tag esistenti
+      allTags = new Set();
+      const users = getUsers();
+      const accounts = users[currentUser]?.accounts || [];
+      accounts.forEach(acc => {
+        if (acc.tags) {
+          acc.tags.forEach(tag => {
+            const decryptedTag = decrypt(tag, currentKey);
+            if (decryptedTag) allTags.add(decryptedTag);
+          });
+        }
+      });
+      updateTagFilter();
+      
+      loadAccounts();
+      
+      // Mostra/nascondi pulsanti biometrici
+      const biometricSupported = await checkBiometricSupport();
+      document.getElementById('biometricLoginBtn').style.display = 
+        (biometricSupported && users[currentUser]?.lastBiometricLogin) ? 'block' : 'none';
+      document.getElementById('setupBiometricBtn').style.display = 
+        (biometricSupported && !users[currentUser]?.lastBiometricLogin) ? 'block' : 'none';
+    }
+
+    // Validazione input account
+    function validateAccountInputs() {
+      const nameValid = document.getElementById('accountName').value.trim();
+      const emailValid = document.getElementById('accountEmail').value.trim();
+      const passValid = document.getElementById('accountPassword').value.trim();
+      document.getElementById('saveAccountBtn').disabled = !(nameValid && emailValid && passValid);
+    }
+
+    document.getElementById('accountName').addEventListener('input', validateAccountInputs);
+    document.getElementById('accountEmail').addEventListener('input', validateAccountInputs);
+    document.getElementById('accountPassword').addEventListener('input', validateAccountInputs);
+
+    // Salva account
+    document.getElementById('saveAccountBtn').addEventListener('click', () => {
+      const name = document.getElementById('accountName').value.trim();
+      const email = document.getElementById('accountEmail').value.trim();
+      const pass = document.getElementById('accountPassword').value.trim();
+      
+      if (!name || !email || !pass) {
+        showAccountError(translate('fillAllFields'));
+        return;
+      }
+      
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showAccountError(translate('invalidEmail'));
+        return;
+      }
+      
+      const users = getUsers();
+      if (!users[currentUser]) {
+        showAccountError(translate('loginError'));
+        return;
+      }
+      
+      // Cripta i tag prima di salvarli
+      const encryptedTags = currentTags.map(tag => encrypt(tag, currentKey));
+      
+      const encryptedAccount = {
+        name: encrypt(name, currentKey),
+        email: encrypt(email, currentKey),
+        pass: encrypt(pass, currentKey),
+        tags: encryptedTags
+      };
+      
+      if (editingAccountIndex >= 0) {
+        // Modifica account esistente
+        users[currentUser].accounts[editingAccountIndex] = encryptedAccount;
+        showAccountSuccess(translate('accountUpdated'));
+      } else {
+        // Aggiungi nuovo account
+        users[currentUser].accounts.push(encryptedAccount);
+        showAccountSuccess(translate('accountSaved'));
+      }
+      
+      if (saveUsers(users)) {
+        // Aggiorna i tag
+        currentTags.forEach(tag => allTags.add(tag));
+        updateTagFilter();
+        
+        // Resetta il form
+        resetAccountForm();
+        loadAccounts();
+      }
+    });
+
+    function resetAccountForm() {
+      document.getElementById('accountName').value = '';
+      document.getElementById('accountEmail').value = '';
+      document.getElementById('accountPassword').value = '';
+      currentTags = [];
+      updateTagsPreview();
+      document.getElementById('saveAccountBtn').disabled = true;
+      editingAccountIndex = -1;
+    }
+
+    // Gestione delle etichette
+    document.getElementById('addTagBtn').addEventListener('click', () => {
+      const tagInput = document.getElementById('tagInput');
+      const tag = tagInput.value.trim();
+      
+      if (tag && !currentTags.includes(tag)) {
+        currentTags.push(tag);
+        allTags.add(tag);
+        updateTagsPreview();
+        updateTagFilter();
+        tagInput.value = '';
+      }
+    });
+
+    function updateTagsPreview() {
+      const tagsPreview = document.getElementById('tagsPreview');
+      tagsPreview.innerHTML = '';
+      currentTags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'tag';
+        span.textContent = tag;
+        tagsPreview.appendChild(span);
+      });
+    }
+
+    function updateTagFilter() {
+      const tagFilter = document.getElementById('tagFilter');
+      const selectedValue = tagFilter.value;
+      
+      while (tagFilter.options.length > 1) {
+        tagFilter.remove(1);
+      }
+      
+      Array.from(allTags).sort().forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        tagFilter.appendChild(option);
+      });
+      
+      if (Array.from(tagFilter.options).some(opt => opt.value === selectedValue)) {
+        tagFilter.value = selectedValue;
+      }
+    }
+
+    // Ricerca e filtraggio
+    document.getElementById('searchInput').addEventListener('input', loadAccounts);
+    document.getElementById('tagFilter').addEventListener('change', loadAccounts);
+
+    // Carica account
+    function loadAccounts() {
+      if (!currentUser || !currentKey) return;
+
+      const users = getUsers();
+      let accounts = users[currentUser]?.accounts || [];
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const selectedTag = document.getElementById('tagFilter').value;
+
+      accounts = accounts.filter(acc => {
+        const nameMatch = decrypt(acc.name, currentKey).toLowerCase().includes(searchTerm);
+        const emailMatch = decrypt(acc.email, currentKey).toLowerCase().includes(searchTerm);
+        const tagMatch = !selectedTag || (acc.tags && acc.tags.some(tag => decrypt(tag, currentKey) === selectedTag));
+        return (nameMatch || emailMatch) && tagMatch;
+      });
+
+      const accountList = document.getElementById('accountList');
+      accountList.innerHTML = '';
+      accountList.style.display = accounts.length ? 'block' : 'none';
+
+      accounts.forEach((acc, index) => {
+        const item = document.createElement('div');
+        item.className = 'account-item';
+
+        const header = document.createElement('div');
+        header.className = 'account-header';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'account-name';
+        nameEl.textContent = decrypt(acc.name, currentKey);
+
+        const actions = document.createElement('div');
+        actions.className = 'account-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-edit';
+        editBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        `;
+        editBtn.onclick = () => {
+          editingAccountIndex = index;
+          document.getElementById('accountName').value = decrypt(acc.name, currentKey);
+          document.getElementById('accountEmail').value = decrypt(acc.email, currentKey);
+          document.getElementById('accountPassword').value = decrypt(acc.pass, currentKey);
+          currentTags = acc.tags ? acc.tags.map(tag => decrypt(tag, currentKey)).filter(tag => tag) : [];
+          updateTagsPreview();
+          document.getElementById('saveAccountBtn').disabled = false;
+          document.getElementById('accountName').focus();
+        };
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        `;
+        deleteBtn.onclick = () => {
+          if (confirm(translate('deleteConfirm', { name: decrypt(acc.name, currentKey) }))) {
+            deleteAccount(index);
+          }
+        };
+
+        actions.append(editBtn, deleteBtn);
+        header.append(nameEl, actions);
+        item.appendChild(header);
+
+        const emailEl = document.createElement('div');
+        emailEl.className = 'account-email';
+        emailEl.textContent = decrypt(acc.email, currentKey);
+        item.appendChild(emailEl);
+
+        const passContainer = document.createElement('div');
+        passContainer.className = 'account-password-container';
+
+        const passInput = document.createElement('input');
+        passInput.className = 'account-password';
+        passInput.type = 'password';
+        passInput.readOnly = true;
+        passInput.value = decrypt(acc.pass, currentKey);
+
+        const toggleBtn = document.createElement('span');
+        toggleBtn.className = 'toggle-password';
+        toggleBtn.textContent = '👁️';
+        toggleBtn.onclick = () => {
+          passInput.type = passInput.type === 'password' ? 'text' : 'password';
+          toggleBtn.textContent = passInput.type === 'password' ? '👁️' : '🙈';
+        };
+
+        passContainer.append(passInput, toggleBtn);
+        item.appendChild(passContainer);
+
+        const tagsContainer = document.createElement('div');
+        tagsContainer.className = 'account-tags';
+        if (acc.tags) {
+          acc.tags.forEach(tag => {
+            const decryptedTag = decrypt(tag, currentKey);
+            if (decryptedTag) {
+              const tagSpan = document.createElement('span');
+              tagSpan.className = 'tag';
+              tagSpan.textContent = decryptedTag;
+              tagsContainer.appendChild(tagSpan);
+            }
+          });
+        }
+        item.appendChild(tagsContainer);
+
+        accountList.appendChild(item);
+      });
+    }
+
+    function deleteAccount(index) {
+      const users = getUsers();
+      if (users[currentUser]?.accounts) {
+        users[currentUser].accounts.splice(index, 1);
+        if (saveUsers(users)) {
+          loadAccounts();
+          updateTagFilter();
+        }
+      }
+    }
+
+    // Esporta dati
+    function exportData() {
+      if (!currentUser) {
+        showAccountError(translate('loginError'));
+        return;
+      }
+
+      try {
+        const users = getUsers();
+        if (!users[currentUser]) {
+          showAccountError(translate('exportError') + ": Nessun dato utente trovato.");
+          return;
+        }
+
+        // Esporta l'intero oggetto dell'utente corrente, inclusi gli account
+        const data = JSON.stringify({
+          passHash: users[currentUser].passHash,
+          accounts: users[currentUser].accounts || [],
+          isPro: users[currentUser].isPro,
+          lastBiometricLogin: users[currentUser].lastBiometricLogin,
+          biometricSecret: users[currentUser].biometricSecret
+        }, null, 2);
+
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `accounts_${currentUser}_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        showAccountSuccess("Dati esportati con successo!");
+      } catch (e) {
+        showAccountError(translate('exportError') + ": " + e.message);
+        console.error("Errore esportazione:", e);
+      }
+    }
+
+    // Importa dati
+    function importData(event) {
+      if (!currentUser || !currentKey) {
+        showAccountError(translate('loginError'));
+        return;
+      }
+
+      const file = event.target.files[0];
+      if (!file) {
+        showAccountError(translate('importError') + ": Nessun file selezionato.");
+        return;
+      }
+
+      const importInput = document.getElementById('importFile');
+      importInput.disabled = true;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          
+          // Verifica la struttura del file
+          if (!data || !Array.isArray(data.accounts)) {
+            throw new Error("Formato file non valido o account mancanti.");
+          }
+
+          const users = getUsers();
+          if (!users[currentUser]) {
+            throw new Error("Utente corrente non trovato.");
+          }
+
+          // Valida gli account importati
+          const validAccounts = data.accounts.filter(acc => {
+            return (
+              acc.name &&
+              acc.email &&
+              acc.pass &&
+              decrypt(acc.name, currentKey) &&
+              decrypt(acc.email, currentKey) &&
+              decrypt(acc.pass, currentKey)
+            );
+          });
+
+          if (validAccounts.length === 0 && data.accounts.length > 0) {
+            throw new Error("Nessun account valido importato. Verifica la password.");
+          }
+
+          // Aggiorna gli account dell'utente
+          users[currentUser].accounts = validAccounts;
+          users[currentUser].isPro = true; // Mantieni isPro: true nella versione Pro
+          if (data.lastBiometricLogin && data.biometricSecret) {
+            users[currentUser].lastBiometricLogin = data.lastBiometricLogin;
+            users[currentUser].biometricSecret = data.biometricSecret;
+          }
+
+          // Aggiorna i tag
+          allTags = new Set();
+          validAccounts.forEach(acc => {
+            if (acc.tags && Array.isArray(acc.tags)) {
+              acc.tags.forEach(tag => {
+                const decryptedTag = decrypt(tag, currentKey);
+                if (decryptedTag) allTags.add(decryptedTag);
+              });
+            }
+          });
+
+          if (saveUsers(users)) {
+            showAccountSuccess(translate('importSuccess', { count: validAccounts.length }));
+            loadAccounts();
+            updateTagFilter();
+          } else {
+            throw new Error("Errore nel salvataggio dei dati importati.");
+          }
+        } catch (e) {
+          showAccountError(translate('importError') + ": " + e.message);
+          console.error("Errore importazione:", e);
+        } finally {
+          importInput.disabled = false;
+          event.target.value = '';
+        }
+      };
+      reader.onerror = () => {
+        showAccountError(translate('importError') + ": Errore nella lettura del file.");
+        importInput.disabled = false;
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    // Biometria
+    async function checkBiometricSupport() {
+      if (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform()) {
+        try {
+          const { BiometricAuth } = Capacitor.Plugins;
+          const result = await BiometricAuth.checkBiometry();
+          return result.isAvailable;
+        } catch {
+          return false;
+        }
+      }
+      return false;
+    }
+
+    document.getElementById('biometricLoginBtn').addEventListener('click', async () => {
+      if (!await checkBiometricSupport()) {
+        showError(translate('biometricNotSupported'));
+        return;
+      }
+
+      try {
+        const { BiometricAuth } = Capacitor.Plugins;
+        const result = await BiometricAuth.authenticate({
+          reason: translate('biometricReason'),
+          cancelTitle: translate('cancel'),
+          maxAttempts: 3
+        });
+        
+        if (result.success) {
+          const users = getUsers();
+          const user = Object.keys(users).find(u => 
+            users[u].lastBiometricLogin === true
+          );
+          
+          if (user) {
+            currentUser = user;
+            currentKey = decrypt(users[user].biometricSecret, user + users[user].passHash);
+            if (!currentKey) {
+              showError("Errore nella decrittazione della chiave biometrica.");
+              return;
+            }
+            initApp();
+          } else {
+            showError(translate('noBiometricAccount'));
+          }
+        }
+      } catch (error) {
+        showError(translate('biometricError') + ": " + error.message);
+      }
+    });
+
+    document.getElementById('setupBiometricBtn').addEventListener('click', async () => {
+      if (!await checkBiometricSupport()) {
+        showError(translate('biometricNotSupported'));
+        return;
+      }
+
+      const pass = document.getElementById('userpass').value;
+      if (!pass) {
+        showError(translate('fillPasswordFirst'));
+        return;
+      }
+
+      try {
+        const { BiometricAuth } = Capacitor.Plugins;
+        const result = await BiometricAuth.authenticate({
+          reason: translate('setupBiometric'),
+          cancelTitle: translate('cancel')
+        });
+        
+        if (result.success) {
+          const users = getUsers();
+          const user = document.getElementById('username').value.trim();
+          if (!users[user]) {
+            showError("Utente non trovato. Effettua prima il login.");
+            return;
+          }
+          users[user].lastBiometricLogin = true;
+          users[user].biometricSecret = encrypt(pass, user + users[user].passHash);
+          if (saveUsers(users)) {
+            showError(translate('biometricSetupSuccess'));
+            document.getElementById('setupBiometricBtn').style.display = 'none';
+            document.getElementById('biometricLoginBtn').style.display = 'block';
+          } else {
+            throw new Error("Errore nel salvataggio della configurazione biometrica.");
+          }
+        }
+      } catch (error) {
+        showError(translate('biometricSetupError') + ": " + error.message);
+      }
+    });
+
+    // Tema
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark');
+      document.body.classList.toggle('dark');
+      document.querySelector('.theme-icon').textContent = isDark ? '🌞' : '🌙';
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+
+    // Inizializzazione
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Imposta tema
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.theme-icon').textContent = '🌙';
+      }
+      
+      // Imposta lingua
+      updateUI();
+      
+      // Auto-login biometrico se supportato
+      if (await checkBiometricSupport()) {
+        const users = getUsers();
+        const user = Object.keys(users).find(u => users[u].lastBiometricLogin);
+        if (user) {
+          document.getElementById('biometricLoginBtn').style.display = 'block';
+          document.getElementById('loginContainer').style.display = 'block';
+        }
+      }
+      
+      // Auto-login normale
+      const user = localStorage.getItem('authUser');
+      if (user) {
+        currentUser = user;
+        document.getElementById('username').value = user;
+        document.getElementById('userpass').focus();
+      }
+      
+      // Carica eventuali tag esistenti
+      if (currentUser) {
+        const users = getUsers();
+        const accounts = users[currentUser]?.accounts || [];
+        accounts.forEach(acc => {
+          if (acc.tags) {
+            acc.tags.forEach(tag => {
+              const decryptedTag = decrypt(tag, currentKey);
+              if (decryptedTag) allTags.add(decryptedTag);
+            });
+          }
+        });
+        updateTagFilter();
+      }
+    });
+  </script>
+</body>
+</html>
